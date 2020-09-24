@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<maping>
+  <varchar>String</varchar>
+  <char>String</char>
+  <text>String</text>
+  <int>Integer</int>
+  <decimal>BigDecimal</decimal>
+  <datetime>Date</datetime>
+  <other>String</other>
+</maping>
