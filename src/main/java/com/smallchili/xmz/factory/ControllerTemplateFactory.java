@@ -1,22 +1,29 @@
 package com.smallchili.xmz.factory;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.smallchili.xmz.util.BuildPathUtil;
 import com.smallchili.xmz.util.NameConverUtil;
 import com.smallchili.xmz.util.XmlUtil;
-
+/**
+ * controller模板工厂
+ * @author xmz
+ * @date 2020/09/26
+ *
+ */
 public class ControllerTemplateFactory implements TemplateFactory{
-
-	public static final String CONTROLLER_TEMPLATE_PATH = TEMPLATE_PATH + "\\controller\\";
-	
+    // 模板路径
+	public static final String CONTROLLER_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "controller");
+	// 模板名
 	public static final String TEMPLATE_NAME = "controller";
 	
 	@Override
 	public void create() {
-		
+		 
 	}
 
 	@Override
@@ -32,7 +39,8 @@ public class ControllerTemplateFactory implements TemplateFactory{
 		String author = XmlUtil.getRootElement().getName();
 		String nowDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date()).toString();		
 		try {
-			tableMap.forEach((tableName, entityName) -> {			
+			tableMap.forEach((tableName, entityName) -> {
+				String destFullPath = destPath + File.separator + entityName + "Controller.java";
 				Map<String, Object> templateParamMap = new HashMap<>();
 				templateParamMap.put("controllerPkName",controllerPkName);
 				templateParamMap.put("servicePkName",servicePkName);
@@ -43,9 +51,9 @@ public class ControllerTemplateFactory implements TemplateFactory{
 				//设置实体名
 				templateParamMap.put("Domain", entityName);
 				templateParamMap.put("domain", NameConverUtil.lineToHump(tableName));
-				generateByTemplate(CONTROLLER_TEMPLATE_PATH, TEMPLATE_NAME, destPath + "//" + entityName + "Controller.java",
-						templateParamMap);
-				log.info("生成{}Controller.java", entityName);
+				generateByTemplate(CONTROLLER_TEMPLATE_PATH, TEMPLATE_NAME,
+						destFullPath,templateParamMap);
+				log.info("已创建 [{}Controller.java]", entityName);
 			});
 		} catch (Exception e) {
 			log.error("======Controller类生成发生异常，异常信息:{}======", e);

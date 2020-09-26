@@ -47,6 +47,8 @@ public class DtoTemplateFactory implements TemplateFactory {
 				} catch (InterruptedException e) {				
 					e.printStackTrace();
 				}
+				//生成的目标类全路径
+				String destFullPath = destPath + File.separator + objectName + "DTO.java";				
 				// 获取列信息
 				List<Field> fieldList = DataBaseUtil.getColumnByTableName(tableName);
 				Set<String> javaTypeSet = DataBaseUtil.getJavaTypes(fieldList);
@@ -56,9 +58,9 @@ public class DtoTemplateFactory implements TemplateFactory {
 				templateParamMap.put("className", objectName);
 				templateParamMap.put("packageName", NameConverUtil.getPackageName("dtoPackage"));
 				// 传入参数，根据模板生成对应类
-				generateByTemplate(ENTITY_TEMPLATE_PATH, TEMPLATE_NAME, destPath + "//" + objectName + "DTO.java",
+				generateByTemplate(ENTITY_TEMPLATE_PATH, TEMPLATE_NAME, destFullPath,
 						templateParamMap);
-				log.info("已创建{}DTO.java...", objectName);
+				log.info("已创建 [{}DTO.java]", objectName);
 			});
 		} catch (Exception e) {
 			log.error("======DTO类生成发生异常，异常信息:{}======", e);

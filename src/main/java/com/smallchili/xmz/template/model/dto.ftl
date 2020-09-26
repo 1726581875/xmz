@@ -23,7 +23,6 @@ public class ${className}DTO{
     public void set${field.nameBigHump}(${field.javaType} ${field.nameHump}) {
         this.${field.nameHump} = ${field.nameHump};
     }
-
     </#list>
 
     @Override

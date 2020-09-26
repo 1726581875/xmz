@@ -1,10 +1,13 @@
 package com.smallchili.xmz.factory;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.smallchili.xmz.util.BuildPathUtil;
+import com.smallchili.xmz.util.DataBaseUtil;
 import com.smallchili.xmz.util.NameConverUtil;
 import com.smallchili.xmz.util.XmlUtil;
 
@@ -15,7 +18,7 @@ import com.smallchili.xmz.util.XmlUtil;
  */
 public class ServiceTemplateFactory implements TemplateFactory {
 
-	public static final String SERVICE_TEMPLATE_PATH = TEMPLATE_PATH + "\\service\\";
+	public static final String SERVICE_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "service");
 	
 	public static final String TEMPLATE_NAME = "service";
 	
@@ -39,7 +42,10 @@ public class ServiceTemplateFactory implements TemplateFactory {
 		String author = XmlUtil.getRootElement().getName();
 		String nowDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date()).toString();		
 		try {
-			tableMap.forEach((tableName, entityName) -> {			
+			tableMap.forEach((tableName, entityName) -> {
+				// 目标文件全路径
+				String destFullPath = destPath + File.separator + entityName + "Service.java";
+				// 模板参数Map
 				Map<String, Object> templateParamMap = new HashMap<>();
 				templateParamMap.put("servicePkName",servicePkName);
 				templateParamMap.put("entityPkName", entityPkName);
@@ -49,12 +55,13 @@ public class ServiceTemplateFactory implements TemplateFactory {
 				templateParamMap.put("utilPkName", utilPkName);
 				templateParamMap.put("author", author);
 				templateParamMap.put("nowDate", nowDate);
+				templateParamMap.put("entityKey", DataBaseUtil.getPrimaryName(tableName));
 				//设置实体名
 				templateParamMap.put("Domain", entityName);
 				templateParamMap.put("domain", NameConverUtil.lineToHump(tableName));
-				generateByTemplate(SERVICE_TEMPLATE_PATH, TEMPLATE_NAME, destPath + "//" + entityName + "Service.java",
-						templateParamMap);
-				log.info("生成{}Service.java", entityName);
+				generateByTemplate(SERVICE_TEMPLATE_PATH, TEMPLATE_NAME,
+						destFullPath,templateParamMap);
+				log.info("已创建 [{}Service.java]", entityName);
 			});
 		} catch (Exception e) {
 			log.error("======Service类生成发生异常，异常信息:{}======", e);

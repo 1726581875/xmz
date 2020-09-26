@@ -12,12 +12,16 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.smallchili.xmz.enums.ProjectEnum;
+
 
 /**
- * @author xmz 2020年9月12日 xml文件读取工具类
+ * @author xmz 
+ * @date 2020/9/12
+ * xml文件读取工具类
  */
 public class XmlUtil {
-
+    // 配置文件所在位置
 	public static final String PROFILE_PATH = "src\\main\\java\\profile.xml";
 	
 	// 存储xml结构里的<节点名,节点元素对象>
@@ -138,6 +142,18 @@ public class XmlUtil {
 		}	
 		return element.getTextTrim();
 	}
+	
+	/**
+	 * 根据ProjectEnum枚举类获取到标签的内容
+	 * @param projectEnum
+	 * @return
+	 */
+	public static String getText(ProjectEnum projectEnum) {
+		getElementMap();
+		String nodeName = projectEnum.getElementName();
+		return getText(nodeName);
+	}
+	
 
 	public static Element getNode(String nodeName) {
 		getElementMap();

@@ -83,12 +83,12 @@ public class ${Domain}Service {
      */
     public Integer update(${Domain} ${domain}){
         
-        if(${domain} == null || ${domain}.getUserId() == null){
+        if(${domain} == null || ${domain}.get${entityKey}() == null){
             throw new IllegalArgumentException("更新的对象不能为null");
         }
-        Optional<${Domain}> optional = ${domain}Repository.findById(${domain}.getUserId());
+        Optional<${Domain}> optional = ${domain}Repository.findById(${domain}.get${entityKey}());
         if(!optional.isPresent()){
-            throw new RuntimeException("找不到id为"+ ${domain}.getUserId() +"的用户");
+            throw new RuntimeException("找不到id为"+ ${domain}.get${entityKey}() +"的用户");
         }
         ${Domain} update${Domain} = ${domain}Repository.save(optional.get());
         return update${Domain} == null ? 0 : 1;

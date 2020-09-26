@@ -1,6 +1,5 @@
 package ${packageName};
 
-import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,9 +16,7 @@ import java.math.BigDecimal;
 @Entity
 public class ${className}{
     <#list fieldList as field>
-    /**
-     * ${field.comment}
-     */
+    // ${field.comment}   
     <#if field.keyType=='PRI'>
     @Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

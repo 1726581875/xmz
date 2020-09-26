@@ -7,6 +7,8 @@ import java.util.Map;
 import org.dom4j.Element;
 import org.junit.Test;
 
+import com.smallchili.xmz.enums.ProjectEnum;
+import com.smallchili.xmz.util.BuildPathUtil;
 import com.smallchili.xmz.util.FileUtil;
 import com.smallchili.xmz.util.NameConverUtil;
 import com.smallchili.xmz.util.XmlUtil;
@@ -14,37 +16,29 @@ import com.smallchili.xmz.util.XmlUtil;
 /**
  * @author xmz
  * @date 2020/09/29
- *
+ * 生成Maven工程工厂
  */
 public class MavenProjectFactory implements TemplateFactory {
 
-	/*
-	 * //工程根目录 public String ROOT_PATH = "E:\\fujian\\blog\\"; //源码目录 public
-	 * String SOURCE_CODE_PATH = ROOT_PATH + "src\\main\\java\\"; //测试代码目录
-	 * public String TEST_CODE_PATH = ROOT_PATH + "src\\test\\java\\"; //资源目录
-	 * public String RESOURCE_PATH = ROOT_PATH + "src\\main\\resource\\";
-	 * 
-	 * //基础包路径 public String BASE_PACKAGE = SOURCE_CODE_PATH +
-	 * "com\\smallchili\\blog\\"; //测试包路径 public String TEST_BASE_PACKAGE =
-	 * TEST_CODE_PATH + "com\\smallchili\\blog\\";
-	 */
-
 	// 工程根目录
-	public String ROOT_PATH = XmlUtil.getText("projectPath") + XmlUtil.getText("artifactId") + "\\";
+	public String ROOT_PATH = BuildPathUtil.buildDirPath(XmlUtil.getText(ProjectEnum.PROJECT_PATH),
+			XmlUtil.getText(ProjectEnum.ARTIFACT_ID));
 	// 源码目录
-	public String SOURCE_CODE_PATH = ROOT_PATH + "\\src\\main\\java\\";
+	public String SOURCE_CODE_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "main", "java");
 	// 测试代码目录
-	public String TEST_CODE_PATH = ROOT_PATH + "\\src\\test\\java\\";
+	public String TEST_CODE_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "test", "java");
 	// 资源目录
-	public String RESOURCES_PATH = ROOT_PATH + "\\src\\main\\resources\\";
+	public String RESOURCES_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "main", "resources");
 
 	// 基础包路径
-	public String BASE_PACKAGE = SOURCE_CODE_PATH + NameConverUtil.getDirNameByPackageName(XmlUtil.getText("groupId"))
-			+ NameConverUtil.getDirNameByPackageName(XmlUtil.getText("artifactId"));
+	public String BASE_PACKAGE = BuildPathUtil.buildDirPath(SOURCE_CODE_PATH,
+			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.GROUP_ID)),
+			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.ARTIFACT_ID)));
 	// 测试包路径
-	public String TEST_BASE_PACKAGE = TEST_CODE_PATH
-			+ NameConverUtil.getDirNameByPackageName(XmlUtil.getText("groupId")) + XmlUtil.getText("artifactId");
-
+	public String TEST_BASE_PACKAGE = BuildPathUtil.buildDirPath(TEST_CODE_PATH,
+			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.GROUP_ID)),
+			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.ARTIFACT_ID)));
+	
 	@Override
 	public void create() {
 
@@ -58,44 +52,37 @@ public class MavenProjectFactory implements TemplateFactory {
 		createYmlFile();
         //生成代码
 		generatorCode();
-
+		
 	}
 
 	private void generatorCode() {
-		// 创建实体类
-		TemplateFactory entityTemplateFactory = new EntityTemplateFactory();
-		String entityDirPath = BASE_PACKAGE + XmlUtil.getText("entityPackage");
-		entityTemplateFactory.create(entityDirPath);
+		// 创建实体类	
+		String entityDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.ENTITY_PACKAGE));
+		TemplateFactory.build(EntityTemplateFactory.class).create(entityDirPath);
 
 		// 创建dto类
-		TemplateFactory dtoTemplateFactory = new DtoTemplateFactory();
-		String dtoDirPath = BASE_PACKAGE + XmlUtil.getText("dtoPackage");
-		dtoTemplateFactory.create(dtoDirPath);
+		String dtoDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.DTO_PACKAGE_NAME));
+		TemplateFactory.build(DtoTemplateFactory.class).create(dtoDirPath);
 
-		// 创建dao
-		TemplateFactory daoTemplateFactory = new DaoTemplateFactory();
-		String daoDirPath = BASE_PACKAGE + XmlUtil.getText("daoPackage");
-		daoTemplateFactory.create(daoDirPath);
-
-		// 创建util
-		TemplateFactory utilTemplateFactory = new UtilTemplateFactory();
-		String utilDirPath = BASE_PACKAGE + XmlUtil.getText("utilPackage");
-		utilTemplateFactory.create(utilDirPath);
+		// 创建dao	
+		String daoDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.DAO_PACKAGE_NAME));		
+		TemplateFactory.build(DaoTemplateFactory.class).create(daoDirPath);
+		
+		// 创建util		
+		String utilDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.UTIL_PACKAGE_NAME));	
+		TemplateFactory.build(UtilTemplateFactory.class).create(utilDirPath);
 
 		// 创建vo
-		TemplateFactory voTemplateFactory = new VoTemplateFactory();
-		String voDirPath = BASE_PACKAGE + XmlUtil.getText("voPackage");
-		voTemplateFactory.create(voDirPath);
+		String voDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.VO_PACKAGE_NAME));
+		TemplateFactory.build(VoTemplateFactory.class).create(voDirPath);
 
 		// 生成Service层代码
-		TemplateFactory serviceTemplateFactory = new ServiceTemplateFactory();
-		String serviceDirPath = BASE_PACKAGE + XmlUtil.getText("servicePackage");
-		serviceTemplateFactory.create(serviceDirPath);
-
+		String serviceDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE + XmlUtil.getText(ProjectEnum.SERVICE_PACKAGE_NAME));
+		TemplateFactory.build(ServiceTemplateFactory.class).create(serviceDirPath);
+		
 		// 生成Controller层代码
-		TemplateFactory controllerTemplateFactory = new ControllerTemplateFactory();
-		String controllerDirPath = BASE_PACKAGE + XmlUtil.getText("controllerPackage");
-		controllerTemplateFactory.create(controllerDirPath);
+		String controllerDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.CONTROLLER_PACKAGE_NAME));
+		TemplateFactory.build(ControllerTemplateFactory.class).create(controllerDirPath);
 
 	}
 
@@ -183,9 +170,9 @@ public class MavenProjectFactory implements TemplateFactory {
 		packageNodeList.forEach(node -> {
 			String nodeName = node.getTextTrim();
 			if (!nodeName.equals("")) {
-				// src/main/java下生成包目录(dao、service、controller等)
+				// [src/main/java]下生成包目录(dao、service、controller等)
 				FileUtil.mkdirs(BASE_PACKAGE + nodeName);
-				// src/test/java测试目录下生成对应包
+				// [src/test/java]测试目录下生成对应包
 				FileUtil.mkdirs(TEST_BASE_PACKAGE + nodeName);
 				log.info("创建{}包", nodeName);
 			}

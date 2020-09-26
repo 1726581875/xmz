@@ -1,7 +1,23 @@
 package com.smallchili.xmz.factory;
 
+import com.smallchili.xmz.util.BuildPathUtil;
+import com.smallchili.xmz.util.FileUtil;
+import com.smallchili.xmz.util.XmlUtil;
+
 public class VueProjectFactory implements TemplateFactory{
 
+	private String VUE_ROOT_PATH = BuildPathUtil.buildDirPath(XmlUtil.getText("projectPath"),"vue");
+	
+	private String VUE_PUBLIC_PATH = BuildPathUtil.buildDirPath(VUE_ROOT_PATH, "public");
+	
+	private String VUE_SRC_PATH = BuildPathUtil.buildDirPath(VUE_ROOT_PATH, "src");
+	
+	private String VUE_COMPONENTS_PATH = BuildPathUtil.buildDirPath(VUE_SRC_PATH,"components");
+	
+	private String VUE_VIEWS_PATH = BuildPathUtil.buildDirPath(VUE_SRC_PATH, "components");
+	
+	private String VUE_ASSETS_PATH = BuildPathUtil.buildDirPath(VUE_SRC_PATH, "assets");
+	
 	
 	
 	@Override
@@ -21,6 +37,7 @@ public class VueProjectFactory implements TemplateFactory{
 	
 	
 	private void createIndexHtml() {
+		
 	}
 
 
@@ -34,9 +51,14 @@ public class VueProjectFactory implements TemplateFactory{
 	}
 
 
-
 	private void initBaseDir() {
-		
+		/* 创建vue基本目录 */
+	    FileUtil.mkdirs(VUE_ROOT_PATH);
+	    FileUtil.mkdirs(VUE_SRC_PATH);
+	    FileUtil.mkdirs(VUE_PUBLIC_PATH);
+	    FileUtil.mkdirs(VUE_COMPONENTS_PATH);
+	    FileUtil.mkdirs(VUE_VIEWS_PATH);
+	    FileUtil.mkdirs(VUE_ASSETS_PATH);
 	}
 
 

@@ -7,14 +7,21 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import com.smallchili.xmz.constant.PathConstant;
+import com.smallchili.xmz.util.BuildPathUtil;
 import com.smallchili.xmz.util.DataBaseUtil;
 import com.smallchili.xmz.util.NameConverUtil;
 import com.smallchili.xmz.util.XmlUtil;
 
+/**
+ * dao模板工厂
+ * @author xmz
+ * @date 2020/09/26
+ *
+ */
 public class DaoTemplateFactory implements TemplateFactory {
-
-	public static final String DAO_TEMPLATE_PATH = TEMPLATE_PATH + "dao\\";
-	
+    // 模板位置
+	public static final String DAO_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "dao");
+	// 模板名称
 	public static final String TEMPLATE_NAME = "dao";
 	
 	@Override
@@ -32,7 +39,7 @@ public class DaoTemplateFactory implements TemplateFactory {
         //获取全部 <表名,实体类名>
 		Map<String, String> tableNameMap = XmlUtil.getTableNameMap();
 		tableNameMap.forEach((tableName, ObjectName) -> {
-			String keyType = DataBaseUtil.getPrimaryTypeByTableName(tableName);
+			String keyType = DataBaseUtil.getPrimaryType(tableName);
 			String author = XmlUtil.getRootElement().getName();
 			Map<String, Object> map = new HashMap<>();
 			map.put("daoPackageName", daoPackageName);
@@ -49,7 +56,8 @@ public class DaoTemplateFactory implements TemplateFactory {
 	public void create(String destPath) {			
 		Map<String, String> tableNameMap = XmlUtil.getTableNameMap();
 		tableNameMap.forEach((tableName, ObjectName) -> {
-			String keyType = DataBaseUtil.getPrimaryTypeByTableName(tableName);
+			String destFullPath = destPath + File.separator +ObjectName +"Repository" +".java";
+			String keyType = DataBaseUtil.getPrimaryType(tableName);
 			String author = XmlUtil.getRootElement().getName();
 			Map<String, Object> map = new HashMap<>();
 			map.put("daoPackageName", NameConverUtil.getPackageName("daoPackage"));
@@ -58,7 +66,7 @@ public class DaoTemplateFactory implements TemplateFactory {
 			map.put("nowDate", new SimpleDateFormat("yyyy/MM/dd").format(new Date()).toString());	
 			map.put("keyType", keyType);
 			map.put("author", author);
-			generateByTemplate(DAO_TEMPLATE_PATH, TEMPLATE_NAME, destPath + "//" +ObjectName +"Repository" +".java", map);					     
+			generateByTemplate(DAO_TEMPLATE_PATH, TEMPLATE_NAME, destFullPath, map);					     
 		});
 		
 	}
