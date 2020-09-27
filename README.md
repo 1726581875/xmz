@@ -5,10 +5,12 @@
 要求环境或工具：jdk1.8、maven、IDE工具（idea或者eclipse等）、mysql5.7以上
 
 ## 1.通过git拉取代码
+```
+git@github.com:1726581875/xmz.git
+```
 
-## 2.找到src/main/java下的profile.xml文件
-
-## 3.profile.xml对配置进行修改
+## 2.profile.xml对配置进行修改
+找到src/main/java下的profile.xml文件
 
 - 配置项一，修改连接数据库的参数，**url、username、password**改成你自己对应的。
 
@@ -73,7 +75,7 @@
 
 还有个可选配置就是根标签的名字，<xmz></xmz>可以改成自己的拼音缩写或者其他名，它会对应到生成类的注释里的author。
 
-## 4.运行
+## 3.运行
 
 找到com.smallchili.xmz包下了Application.java类，运行它即可
 
