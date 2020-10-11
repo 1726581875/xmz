@@ -14,9 +14,9 @@ public class VoTemplateFactory implements TemplateFactory {
 
 	public static final String VO_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "vo");
 
-	public static final String RESULT_TEMPLATE_ANME = "RespResult";
+	public static final String RESULT_TEMPLATE_ANME = "resp_result";
 	
-	public static final String PAGE_VO_TEMPLATE_ANME = "PageVO";
+	public static final String PAGE_VO_TEMPLATE_ANME = "page_vo";
 
 	@Override
 	public void create() {
@@ -53,6 +53,14 @@ public class VoTemplateFactory implements TemplateFactory {
 		generateByTemplate(VO_TEMPLATE_PATH, RESULT_TEMPLATE_ANME,
 				fullPath, templateParamMap);
 		log.info("已创建 [RespResult.java]");
+	}
+
+	@Override
+	public void create(String destPath, String templateName) {
+		log.info("===开始创建VO类  begin===");
+		createRespResult(destPath);
+		createPageVO(destPath);
+		log.info("===VO类创建完成  den===");
 	}
 
 }

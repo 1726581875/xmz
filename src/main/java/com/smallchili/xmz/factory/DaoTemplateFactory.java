@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
 import com.smallchili.xmz.constant.PathConstant;
 import com.smallchili.xmz.util.BuildPathUtil;
 import com.smallchili.xmz.util.DataBaseUtil;
@@ -26,34 +25,21 @@ public class DaoTemplateFactory implements TemplateFactory {
 	
 	@Override
 	public void create() {
-		//1.生成包
-		//获取路径
-		String daoPackageName = XmlUtil.getText("daoPath");
-		String daoPackageDirPath = PathConstant.SOURCE_PATH + 
-				NameConverUtil.getDirNameByPackageName(daoPackageName);		
-		File daoPackageDir = new File(daoPackageDirPath);
-		//如果目录不存在，创建目录
-		if (!daoPackageDir.exists()) {
-			daoPackageDir.mkdirs();
-		}
-        //获取全部 <表名,实体类名>
-		Map<String, String> tableNameMap = XmlUtil.getTableNameMap();
-		tableNameMap.forEach((tableName, ObjectName) -> {
-			String keyType = DataBaseUtil.getPrimaryType(tableName);
-			String author = XmlUtil.getRootElement().getName();
-			Map<String, Object> map = new HashMap<>();
-			map.put("daoPackageName", daoPackageName);
-			map.put("entityPackageName", XmlUtil.getText("entityPath"));
-			map.put("entityName", ObjectName);
-			map.put("nowDate", new SimpleDateFormat("yyyy/MM/dd").format(new Date()).toString());	
-			map.put("keyType", keyType);
-			map.put("author", author);
-			generateByTemplate(DAO_TEMPLATE_PATH, TEMPLATE_NAME, daoPackageDirPath + ObjectName +"Repository" +".java", map);					     
-		});
-		
+        // TODO 待测试
+		String defaultDirPath = PathConstant.SOURCE_PATH +
+				BuildPathUtil.converToDir(NameConverUtil.getPackageName("daoPackage"));
+		create(defaultDirPath);
 	}
 	
-	public void create(String destPath) {			
+	public void create(String destPath) {
+		create(destPath,TEMPLATE_NAME);
+	}
+
+
+	@Override
+	public void create(String destPath, String templateName) {
+		checkAndCreateDir(destPath);
+
 		Map<String, String> tableNameMap = XmlUtil.getTableNameMap();
 		tableNameMap.forEach((tableName, ObjectName) -> {
 			String destFullPath = destPath + File.separator +ObjectName +"Repository" +".java";
@@ -63,18 +49,11 @@ public class DaoTemplateFactory implements TemplateFactory {
 			map.put("daoPackageName", NameConverUtil.getPackageName("daoPackage"));
 			map.put("entityPackageName", NameConverUtil.getPackageName("entityPackage"));
 			map.put("entityName", ObjectName);
-			map.put("nowDate", new SimpleDateFormat("yyyy/MM/dd").format(new Date()).toString());	
+			map.put("nowDate", new SimpleDateFormat("yyyy/MM/dd").format(new Date()).toString());
 			map.put("keyType", keyType);
 			map.put("author", author);
-			generateByTemplate(DAO_TEMPLATE_PATH, TEMPLATE_NAME, destFullPath, map);					     
+			generateByTemplate(DAO_TEMPLATE_PATH, templateName, destFullPath, map);
 		});
-		
-	}
-	
-	
-	@Test
-	public void test(){
-		create();
 	}
 
 }

@@ -10,7 +10,7 @@
   
   <!-- 配置数据库表名和实体名映射 -->
   <tables>  
-    <table>
+     <table>
       <tableName>article</tableName>
       <entityName>Article</entityName>
     </table>
@@ -43,27 +43,36 @@
     <table>
       <tableName>user_star</tableName>
       <entityName>UserStar</entityName>
-    </table> 
+    </table>
+      
+<!--    <table>
+      <tableName>course</tableName>
+      <entityName>Course</entityName>
+    </table>  
+      
+    <table>
+      <tableName>chapter_section</tableName>
+      <entityName>Section</entityName>
+    </table>
+    
+     <table>
+      <tableName>chapter</tableName>
+      <entityName>Chapter</entityName>
+    </table>-->
+         
        
  </tables>
-  
-  <!-- 包路径 暂时不用注释掉  -->
-  <!-- 
-  <paths>
-    <entityPath>lsx.xxx.entity</entityPath>
-    <daoPath>lsx.xxx.dao</daoPath>
-    <utilPath>llo.xxx.util</utilPath>
-  </paths>
-   -->
+
   
 
 <project>
-     <projectPath>E:\fujian\</projectPath> <!-- 项目根目录 -->
+     <!-- 生成的项目所在目录 -->
+     <projectPath>E:\fujian\</projectPath> 
      <maven>
         <groupId>com.small.chili</groupId> <!-- maven工程的groupId -->
         <artifactId>blog</artifactId> <!-- artifactId -->
      </maven>
-     <!-- 配置要创建的包名(前缀都是groupId + artifactId) -->
+     <!-- 配置要创建的包名 -->
      <package>
        <entityPackage>entity</entityPackage>
        <daoPackage>dao</daoPackage>

@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
 import com.smallchili.xmz.constant.PathConstant;
 import com.smallchili.xmz.util.BuildPathUtil;
 import com.smallchili.xmz.util.NameConverUtil;
@@ -15,12 +14,7 @@ public class UtilTemplateFactory implements TemplateFactory {
 
 	public static final String UTIL_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "util");
 	
-	public static final String COPY_UTIL_TEMPLATE_ANME = "CopyUtil";
-	
-	@Test
-	public void test(){
-		create();
-	}
+	public static final String COPY_UTIL_TEMPLATE_NAME = "copy_util";
 	
 	
 	@Override
@@ -37,30 +31,39 @@ public class UtilTemplateFactory implements TemplateFactory {
 		createCopyUtil(utilPackageDirPath);
 	}
 
+
+	@Override
+	public void create(String destPath) {
+		create(destPath, null);
+	}
+
+
+	@Override
+	public void create(String destPath, String templateName) {
+
+		log.info("===开始创建Util工具类  begin===");
+		createCopyUtil(destPath);
+		log.info("===Util工具类创建完成  end===");
+
+	}
+
 	/**
-	 * 创建CopyUtil
-	 * @param path
+	 *
+	 * @param destPath
 	 */
-	private void createCopyUtil(String dirPath) { 
+	private void createCopyUtil(String destPath) {
+		checkAndCreateDir(destPath);
 		//目标文件全路径
-		String fullPath = dirPath + File.separator +"CopyUtil.java";
+		String fullPath = destPath + File.separator +"CopyUtil.java";
 		String author = XmlUtil.getRootElement().getName();
 		Map<String, Object> templateParamMap = new HashMap<>();
 		templateParamMap.put("nowTime", new SimpleDateFormat("yyyy/MM/dd").format(new Date()).toString());
 		templateParamMap.put("author", author);
 		templateParamMap.put("packageName", NameConverUtil.getPackageName("utilPackage"));
-		generateByTemplate(UTIL_TEMPLATE_PATH, COPY_UTIL_TEMPLATE_ANME,
+		generateByTemplate(UTIL_TEMPLATE_PATH, COPY_UTIL_TEMPLATE_NAME,
 				fullPath, templateParamMap);
 		log.info("已创建 [CopyUtil.java]");
 	}
-	
 
-	@Override
-	public void create(String destPath) {
-		log.info("===开始创建Util工具类  begin===");
-		createCopyUtil(destPath);
-		log.info("===Util工具类创建完成  end===");
-	}
-	
 
 }

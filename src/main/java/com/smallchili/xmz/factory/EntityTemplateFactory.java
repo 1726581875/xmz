@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Test;
 import com.smallchili.xmz.constant.PathConstant;
+import com.smallchili.xmz.enums.ProjectEnum;
 import com.smallchili.xmz.model.Field;
 import com.smallchili.xmz.util.BuildPathUtil;
 import com.smallchili.xmz.util.DataBaseUtil;
@@ -20,7 +20,8 @@ import com.smallchili.xmz.util.XmlUtil;
  */
 public class EntityTemplateFactory implements TemplateFactory {
 
-	public static final String ENTITY_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "model");
+	public static final String ENTITY_TEMPLATE_PATH = BuildPathUtil
+			.buildDirPath(TEMPLATE_PATH, "model");
 	
 	public static final String TEMPLATE_NAME = "entity";
 	
@@ -32,24 +33,26 @@ public class EntityTemplateFactory implements TemplateFactory {
 	@Override
 	public void create() {
 		//xml里配置的实体类包名路径
-		String packageName = XmlUtil.getText("entityPath");
-		String packageDirPath = PathConstant.SOURCE_PATH + NameConverUtil.getDirNameByPackageName(packageName);
-		File packageDir = new File(packageDirPath);
-		//如果目录不存在，创建目录
-		if(!packageDir.exists()){
-			packageDir.mkdirs();
-		}			
-		create(packageDirPath);
+		String defaultDirPath = PathConstant.SOURCE_PATH
+				+ BuildPathUtil.converToDir(NameConverUtil.getPackageName(
+						ProjectEnum.ENTITY_PACKAGE.getElementName()));
+
+		create(defaultDirPath);
 		
 	}
 
 	/**
 	 * 生成实体类
 	 * @param destPath 目标路径
-	 * @param packageName  类的包名称
 	 */
 	@Override
-	public void create(String destPath) {			
+	public void create(String destPath) {
+		create(destPath, TEMPLATE_NAME);
+	}
+	
+	@Override
+	public void create(String destPath, String templateName) {	
+		checkAndCreateDir(destPath);		
 		// 获取配置profile.xml文件里的所有配置,map<tableName,ObjectName>
 		Map<String, String> tableMap = XmlUtil.getTableNameMap();
 		log.info("======开始生成数据库实体类======");
@@ -64,11 +67,12 @@ public class EntityTemplateFactory implements TemplateFactory {
 			Map<String, Object> templateParamMap = new HashMap<>();
 			templateParamMap.put("fieldList", fieldList);
 			templateParamMap.put("javaTypeSet", javaTypeSet);
-			templateParamMap.put("className", objectName);			
-			templateParamMap.put("packageName", NameConverUtil.getPackageName("entityPackage"));
+			templateParamMap.put("className", objectName);
+			templateParamMap.put("tableName",tableName);
+			templateParamMap.put("packageName", NameConverUtil.getPackageName(ProjectEnum.ENTITY_PACKAGE.getElementName()));
 			//传入参数，根据模板生成对应类
-			generateByTemplate(ENTITY_TEMPLATE_PATH, TEMPLATE_NAME, destFullPath, templateParamMap);
-			log.info("已创建 [{}.java]", tableName, objectName);
+			generateByTemplate(ENTITY_TEMPLATE_PATH, templateName, destFullPath, templateParamMap);
+			log.info("已创建 [{}.java]", objectName);
 		});
 		}catch(Exception e){
 			log.error("======数据库实体类生成发生异常，异常信息:{}======", e);
@@ -76,10 +80,5 @@ public class EntityTemplateFactory implements TemplateFactory {
 		log.info("======数据库实体类生成完成======");
 		
 	}
-	
-	
-	@Test
-	public void test(){
-		create();
-	}
+
 }

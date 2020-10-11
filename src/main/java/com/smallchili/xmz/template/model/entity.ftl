@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 </#if>
 </#list>
 
-@Entity
+@Entity(name = "${tableName}")
 public class ${className}{
     <#list fieldList as field>
     // ${field.comment}   

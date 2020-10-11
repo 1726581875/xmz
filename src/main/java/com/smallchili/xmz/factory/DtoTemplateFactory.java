@@ -35,7 +35,7 @@ public class DtoTemplateFactory implements TemplateFactory {
 
 	@Override
 	public void create(String destPath) {
-
+		checkAndCreateDir(destPath);
 		// 获取配置profile.xml文件里的所有配置,map<tableName,ObjectName>
 		Map<String, String> tableMap = XmlUtil.getTableNameMap();
 		log.info("======开始生成DTO类  bengin======");
@@ -68,4 +68,41 @@ public class DtoTemplateFactory implements TemplateFactory {
 		log.info("======DTO类生成完成  end======");
 	}
 
+	
+	
+	@Override
+	public void create(String destPath, String templateName) {
+		checkAndCreateDir(destPath);
+		// 获取配置profile.xml文件里的所有配置,map<tableName,ObjectName>
+		Map<String, String> tableMap = XmlUtil.getTableNameMap();
+		log.info("======开始生成DTO类  bengin======");
+		try {
+			// 遍历多个表信息,生成数据库对应实体类
+			tableMap.forEach((tableName, objectName) -> {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {				
+					e.printStackTrace();
+				}
+				//生成的目标类全路径
+				String destFullPath = destPath + File.separator + objectName + "DTO.java";				
+				// 获取列信息
+				List<Field> fieldList = DataBaseUtil.getColumnByTableName(tableName);
+				Set<String> javaTypeSet = DataBaseUtil.getJavaTypes(fieldList);
+				Map<String, Object> templateParamMap = new HashMap<>();
+				templateParamMap.put("fieldList", fieldList);
+				templateParamMap.put("javaTypeSet", javaTypeSet);
+				templateParamMap.put("className", objectName);
+				templateParamMap.put("packageName", NameConverUtil.getPackageName("dtoPackage"));
+				// 传入参数，根据模板生成对应类
+				generateByTemplate(ENTITY_TEMPLATE_PATH, templateName, destFullPath,
+						templateParamMap);
+				log.info("已创建 [{}DTO.java]", objectName);
+			});
+		} catch (Exception e) {
+			log.error("======DTO类生成发生异常，异常信息:{}======", e);
+		}
+		log.info("======DTO类生成完成  end======");
+	}
+	
 }

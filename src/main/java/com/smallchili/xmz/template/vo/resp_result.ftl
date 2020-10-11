@@ -1,11 +1,11 @@
 package ${packageName};
-
+import java.io.Serializable;
 /**
 * @author ${author}
 * @date ${nowDate}
 * 封装统一返回结果给前端
 */
-public class RespResult{
+public class RespResult implements Serializable{
     // 状态码
     private Integer status;
     // 状态信息

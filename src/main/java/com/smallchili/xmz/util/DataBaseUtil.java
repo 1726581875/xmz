@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -166,6 +165,12 @@ public class DataBaseUtil {
 		}
 		return set;
 	}
-    
-    
+
+
+	public static void main(String[] args) {
+		List<Field> chapter = getColumnByTableName("chapter");
+		chapter.forEach(System.out::println);
+	}
+
+
 }

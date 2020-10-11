@@ -1,12 +1,10 @@
 package com.smallchili.xmz.factory;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.dom4j.Element;
-import org.junit.Test;
-
 import com.smallchili.xmz.enums.ProjectEnum;
 import com.smallchili.xmz.util.BuildPathUtil;
 import com.smallchili.xmz.util.FileUtil;
@@ -21,21 +19,21 @@ import com.smallchili.xmz.util.XmlUtil;
 public class MavenProjectFactory implements TemplateFactory {
 
 	// 工程根目录
-	public String ROOT_PATH = BuildPathUtil.buildDirPath(XmlUtil.getText(ProjectEnum.PROJECT_PATH),
+	private String ROOT_PATH = BuildPathUtil.buildDirPath(XmlUtil.getText(ProjectEnum.PROJECT_PATH),
 			XmlUtil.getText(ProjectEnum.ARTIFACT_ID));
 	// 源码目录
-	public String SOURCE_CODE_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "main", "java");
+	private String SOURCE_CODE_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "main", "java");
 	// 测试代码目录
-	public String TEST_CODE_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "test", "java");
+	private String TEST_CODE_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "test", "java");
 	// 资源目录
-	public String RESOURCES_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "main", "resources");
+	private String RESOURCES_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "main", "resources");
 
 	// 基础包路径
-	public String BASE_PACKAGE = BuildPathUtil.buildDirPath(SOURCE_CODE_PATH,
+	private String BASE_PACKAGE = BuildPathUtil.buildDirPath(SOURCE_CODE_PATH,
 			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.GROUP_ID)),
 			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.ARTIFACT_ID)));
 	// 测试包路径
-	public String TEST_BASE_PACKAGE = BuildPathUtil.buildDirPath(TEST_CODE_PATH,
+	private String TEST_BASE_PACKAGE = BuildPathUtil.buildDirPath(TEST_CODE_PATH,
 			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.GROUP_ID)),
 			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.ARTIFACT_ID)));
 	
@@ -50,11 +48,24 @@ public class MavenProjectFactory implements TemplateFactory {
 		createApplication();
 		// 创建application.yml文件
 		createYmlFile();
-        //生成代码
+        // 生成代码
 		generatorCode();
+        // 生成测试代码
+		generatorTestCode();
 		
 	}
 
+	private void generatorTestCode() {
+		String testDirPath = BuildPathUtil.buildDirPath(TEST_BASE_PACKAGE);
+		TemplateFactory.build(TestTemplateFactory.class).create(testDirPath);
+	}
+
+	@Override
+	public void create(String destPath) {
+		this.ROOT_PATH = BuildPathUtil.buildDirPath(destPath, XmlUtil.getText(ProjectEnum.ARTIFACT_ID));
+		create();
+	}
+	
 	private void generatorCode() {
 		// 创建实体类	
 		String entityDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.ENTITY_PACKAGE));
@@ -78,7 +89,7 @@ public class MavenProjectFactory implements TemplateFactory {
 
 		// 生成Service层代码
 		String serviceDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE + XmlUtil.getText(ProjectEnum.SERVICE_PACKAGE_NAME));
-		TemplateFactory.build(ServiceTemplateFactory.class).create(serviceDirPath);
+		TemplateFactory.build(ServiceTemplateFactory.class).create(serviceDirPath,"service-lombok");
 		
 		// 生成Controller层代码
 		String controllerDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.CONTROLLER_PACKAGE_NAME));
@@ -90,9 +101,10 @@ public class MavenProjectFactory implements TemplateFactory {
 	 * 创建application.yml文件
 	 */
 	private void createYmlFile() {
-		String ymlTemplatePath = TEMPLATE_PATH + "\\config\\";
+		String ymlTemplatePath = BuildPathUtil.buildDirPath(TEMPLATE_PATH , "config");
 		String ymlTemplateName = "application";
 
+		String destFullPath =  RESOURCES_PATH + File.separator + "application.yml";
 		String driver = XmlUtil.getText("driver");
 		String url = XmlUtil.getText("url");
 		String username = XmlUtil.getText("username");
@@ -102,7 +114,7 @@ public class MavenProjectFactory implements TemplateFactory {
 		ymlParamMap.put("url", url);
 		ymlParamMap.put("username", username);
 		ymlParamMap.put("password", password);
-		generateByTemplate(ymlTemplatePath, ymlTemplateName, RESOURCES_PATH + "\\application.yml", ymlParamMap);
+		generateByTemplate(ymlTemplatePath, ymlTemplateName, destFullPath, ymlParamMap);
 
 		log.info("生成application.yml配置文件");
 
@@ -138,7 +150,8 @@ public class MavenProjectFactory implements TemplateFactory {
 	}
 
 	/**
-	 * 初始化工程基本package 1、创建基础包，如smallchili.com.blog (src/main/java下)
+	 * 初始化工程基本package
+	 * 1、创建基础包，如smallchili.com.blog (src/main/java下)
 	 * 2、创建测试基础包，如smallchili.com.blog (src/test/java下)
 	 * 3、创建xml配置文件里配置的包名，如dao、service、controller等包
 	 */
@@ -182,15 +195,16 @@ public class MavenProjectFactory implements TemplateFactory {
 	}
 
 	private void createPomXML() {
-		String pomTemplatePath = TEMPLATE_PATH + "\\config\\";
+		String pomTemplatePath = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "config");
 		String pomTemplateName = "pom";
-
+        
+		String destFullPath = ROOT_PATH + File.separator + "pom.xml";
 		Map<String, Object> pomParamMap = new HashMap<>();
 		String groupId = XmlUtil.getText("groupId");
 		String artifactId = XmlUtil.getText("artifactId");
 		pomParamMap.put("groupId", groupId);
 		pomParamMap.put("artifactId", artifactId);
-		generateByTemplate(pomTemplatePath, pomTemplateName, ROOT_PATH + "\\pom.xml", pomParamMap);
+		generateByTemplate(pomTemplatePath, pomTemplateName, destFullPath, pomParamMap);
 
 		log.info("pom.xml文件生成成功");
 	}
@@ -201,26 +215,24 @@ public class MavenProjectFactory implements TemplateFactory {
 	private void createApplication() {
 		String appTemplatePath = TEMPLATE_PATH;
 		String appTemplateName = "application";
-
+        
 		Map<String, Object> appParamMap = new HashMap<>();
-		String packageName = XmlUtil.getText("groupId") + "." + XmlUtil.getText("artifactId");
-		String className = NameConverUtil.lineToBigHump(XmlUtil.getText("artifactId"));
+		// TODO
+		String packageName = XmlUtil.getText(ProjectEnum.GROUP_ID) + "." + XmlUtil.getText(ProjectEnum.ARTIFACT_ID);
+		String className = NameConverUtil.lineToBigHump(XmlUtil.getText(ProjectEnum.ARTIFACT_ID));
+		String destFullPath = BASE_PACKAGE + File.separator + className + "Application.java";
 		appParamMap.put("packageName", packageName);
 		appParamMap.put("className", className);
-		generateByTemplate(appTemplatePath, appTemplateName, BASE_PACKAGE + className + "Application.java",
-				appParamMap);
+		generateByTemplate(appTemplatePath, appTemplateName, destFullPath, appParamMap);
 
 		log.info("生成启动类 {}Application.java", className);
 	}
 
-	@Test
-	public void test() {
-		create();
-	}
 
 	@Override
-	public void create(String destPath) {
-
+	public void create(String destPath, String templateName) {
+		
 	}
+
 
 }

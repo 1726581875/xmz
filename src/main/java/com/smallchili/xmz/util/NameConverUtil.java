@@ -64,8 +64,10 @@ public class NameConverUtil {
         fullName.append(XmlUtil.getText("groupId"));
         fullName.append(".");
         fullName.append(XmlUtil.getText("artifactId"));
-        fullName.append(".");
-        fullName.append(XmlUtil.getText(packageName));
+        if (packageName != null) {
+            fullName.append(".");
+            fullName.append(XmlUtil.getText(packageName));
+        }
         return fullName.toString();
      }
     

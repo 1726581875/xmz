@@ -20,7 +20,7 @@ public class ServiceTemplateFactory implements TemplateFactory {
 
 	public static final String SERVICE_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "service");
 	
-	public static final String TEMPLATE_NAME = "service";
+	public static final String DEFAULT_TEMPLATE_NAME = "service";
 	
 	@Override
 	public void create() {
@@ -29,6 +29,12 @@ public class ServiceTemplateFactory implements TemplateFactory {
 
 	@Override
 	public void create(String destPath) {
+		create(destPath, DEFAULT_TEMPLATE_NAME);
+	}
+	
+	public void create(String destPath, String templateName) {
+		checkAndCreateDir(destPath);
+		
 		log.info("======开始生成Service类   begin======");
 		Map<String, String> tableMap = XmlUtil.getTableNameMap();
 		/* 获取包名 */
@@ -58,8 +64,8 @@ public class ServiceTemplateFactory implements TemplateFactory {
 				templateParamMap.put("entityKey", DataBaseUtil.getPrimaryName(tableName));
 				//设置实体名
 				templateParamMap.put("Domain", entityName);
-				templateParamMap.put("domain", NameConverUtil.lineToHump(tableName));
-				generateByTemplate(SERVICE_TEMPLATE_PATH, TEMPLATE_NAME,
+				templateParamMap.put("domain", NameConverUtil.lineToHump(entityName));
+				generateByTemplate(SERVICE_TEMPLATE_PATH, templateName,
 						destFullPath,templateParamMap);
 				log.info("已创建 [{}Service.java]", entityName);
 			});
@@ -69,5 +75,6 @@ public class ServiceTemplateFactory implements TemplateFactory {
 		log.info("======Service类生成完成  end======");
 
 	}
+	
 
 }

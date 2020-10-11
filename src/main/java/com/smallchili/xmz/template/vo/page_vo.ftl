@@ -1,23 +1,23 @@
 package ${packageName};
 import java.util.List;
-
+import java.io.Serializable;
 /**
 * @author ${author}
 * @date ${nowDate}
 * 封装分页结果
 */
-public class PageVO <T> {
+public class PageVO<T>  implements Serializable{
 	// 当前第几页
-	private Integer page;
+	private Integer pageIndex;
 	// 每页大小
 	private Integer pageSize;
     // 总页数
-	private Integer totalPages;
+	private Integer pageCount;
 	// 页数据
 	private List<T> content;
 
-	public Integer getPage() {
-		return page;
+	public Integer getPageIndex() {
+		return pageIndex;
 	}
 
 	public Integer getPageSize() {
@@ -28,16 +28,16 @@ public class PageVO <T> {
 		this.pageSize = pageSize;
 	}
 
-	public void setPage(Integer page) {
-		this.page = page;
+	public void setPageIndex(Integer pageIndex) {
+		this.pageIndex = pageIndex;
 	}
 
-	public Integer getTotalPages() {
-		return totalPages;
+	public Integer getPageCount() {
+		return pageCount;
 	}
 
-	public void setTotalPages(Integer totalPages) {
-		this.totalPages = totalPages;
+	public void setPageCount(Integer pageCount) {
+		this.pageCount = pageCount;
 	}
 
 	public List<T> getContent() {
@@ -51,9 +51,9 @@ public class PageVO <T> {
 	@Override
 	public String toString() {
 		return "PageVO{" +
-				"page=" + page +
+				"pageIndex=" + pageIndex +
 				", pageSize=" + pageSize +
-				", totalPages=" + totalPages +
+				", pageCount=" + pageCount +
 				", content=" + content +
 				'}';
 	}

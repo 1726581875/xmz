@@ -12,6 +12,7 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
 import com.smallchili.xmz.enums.ProjectEnum;
 
 
@@ -162,13 +163,13 @@ public class XmlUtil {
 	
 	
 	public static void main(String[] args) throws DocumentException {
-		Map<String, Element> map = XmlUtil.getElementMap();
-		/*map.forEach((k, v) -> {
-			System.out.print(k + " : ");
-			System.out.print(v.getTextTrim());
-			System.out.println();
-		});*/
-		getText("111");
+		List<Integer> list = Lists.newArrayList();
+		for(int i = 0 ; i < 10000; i++){
+			list.add(i);
+		}
+		
+		List<List<Integer>> partition = Lists.partition(list, 1000);
+		partition.get(0).forEach(System.out::println);
 		
 	}
 

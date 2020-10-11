@@ -13,13 +13,12 @@ import com.smallchili.xmz.util.XmlUtil;
  * controller模板工厂
  * @author xmz
  * @date 2020/09/26
- *
  */
 public class ControllerTemplateFactory implements TemplateFactory{
     // 模板路径
 	public static final String CONTROLLER_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "controller");
-	// 模板名
-	public static final String TEMPLATE_NAME = "controller";
+	// 默认模板名
+	public static final String DEFAULT_TEMPLATE_NAME = "controller";
 	
 	@Override
 	public void create() {
@@ -28,6 +27,14 @@ public class ControllerTemplateFactory implements TemplateFactory{
 
 	@Override
 	public void create(String destPath) {
+		create(destPath,DEFAULT_TEMPLATE_NAME);
+	}
+
+	@Override
+	public void create(String destPath, String templateName) {	
+		//checkTemplate(CONTROLLER_TEMPLATE_PATH + File.separator + templateName);
+		checkAndCreateDir(destPath);
+		
 		log.info("======开始生成Controller类   begin======");
 		Map<String, String> tableMap = XmlUtil.getTableNameMap();
 		/* 获取包名 */
@@ -50,8 +57,8 @@ public class ControllerTemplateFactory implements TemplateFactory{
 				templateParamMap.put("nowDate", nowDate);
 				//设置实体名
 				templateParamMap.put("Domain", entityName);
-				templateParamMap.put("domain", NameConverUtil.lineToHump(tableName));
-				generateByTemplate(CONTROLLER_TEMPLATE_PATH, TEMPLATE_NAME,
+				templateParamMap.put("domain", NameConverUtil.lineToHump(entityName));
+				generateByTemplate(CONTROLLER_TEMPLATE_PATH, templateName,
 						destFullPath,templateParamMap);
 				log.info("已创建 [{}Controller.java]", entityName);
 			});
@@ -59,6 +66,7 @@ public class ControllerTemplateFactory implements TemplateFactory{
 			log.error("======Controller类生成发生异常，异常信息:{}======", e);
 		}
 		log.info("======Controller类生成完成  end======");
+		
 	}
 
 }

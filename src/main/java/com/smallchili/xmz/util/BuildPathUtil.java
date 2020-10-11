@@ -45,6 +45,12 @@ public class BuildPathUtil {
 		return packageName.toString();
 	}
 	
+	/**
+	 * 包名转目录名
+	 * aa.bb.cc => /aa/bb/cc/
+	 * @param packageName
+	 * @return
+	 */
 	public static String converToDir(String packageName){			
 		StringBuilder dirPath= new StringBuilder(packageName);
 		int index;

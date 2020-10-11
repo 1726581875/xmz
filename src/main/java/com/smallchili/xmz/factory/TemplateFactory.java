@@ -4,31 +4,35 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.smallchili.xmz.util.BuildPathUtil;
-
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 
+/**
+ * 所有工厂公共父接口
+ * @author xmz
+ * @date 2020/9/18
+ */
 public interface TemplateFactory {
 	// 模板基础路径
-	static final String TEMPLATE_PATH = BuildPathUtil.buildDirPath("src", "main","java","com","smallchili","xmz","template");
+	String TEMPLATE_PATH = BuildPathUtil.buildDirPath("src", "main","java","com","smallchili","xmz","template");
 	
-	static Logger log = LoggerFactory.getLogger(TemplateFactory.class);
+	Logger log = LoggerFactory.getLogger(TemplateFactory.class);
 
 	void create();
 	
 	void create(String destPath);
+	
+	void create(String destPath, String templateName);
 	 
 	default void generateByTemplate(String templatePath, String templateName, String destPath, Map<String, Object> paramMap) {
 		File templateDir = new File(templatePath);
 		if (!templateDir.exists()) {
-			log.error("====模板路径 {}  不存在，结束====");
-			return;
+			log.error("====模板路径 {}  不存在，结束====",templatePath);
+			throw new IllegalArgumentException("模板路径必须提前创建");
 		}			
 		try (FileWriter fileWriter = new FileWriter(destPath);
 				BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
@@ -43,6 +47,19 @@ public interface TemplateFactory {
 		} catch (Exception e) {
 			log.error("====加载模板{} 生成代码失败，发生异常{}====", templateName, e);
 		}
+	}
+	
+   /**
+    * 如果目录不存在则创建目录	
+    * @param destPath
+    */
+	default void checkAndCreateDir(String destPath) {
+		File destDir = new File(destPath);
+		if (!destDir.exists()) {
+			log.warn("目录{} 不存在", destPath);
+			destDir.mkdirs();
+			log.info("已创建目录{} ", destPath);
+		}		
 	}
 	
 	/**
