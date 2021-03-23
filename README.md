@@ -18,7 +18,7 @@ git@github.com:1726581875/xmz.git
  <!--配置数据源 -->
 <dataSource>
     <driver>com.mysql.cj.jdbc.Driver</driver>
-    <url>jdbc:mysql://localhost:3306/blog?characterEncoding=UTF-8&amp;serverTimezone=GMT%2B8</url>
+    <url>jdbc:mysql://localhost:3306/blog?characterEncoding=UTF-8&serverTimezone=GMT%2B8</url>
     <username>root</username>
     <password>root</password>
   </dataSource>
