@@ -8,8 +8,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
 /**
- * @author ${author}
- * @date ${nowTime}
+ * @author ${Author.author}
+ * @date ${Author.date}
  * 复制属性的工具类
  */
 public class CopyUtil {

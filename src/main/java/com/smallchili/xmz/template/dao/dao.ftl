@@ -4,8 +4,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import ${entityPackageName}.${entityName};
 
 /**
- * @author ${author}
- * @date ${nowDate}
+ * @author ${Author.author}
+ * @date ${Author.date}
  * @see JpaRepository 支持常用增删查改
  * @see JpaSpecificationExecutor 支持多条件分页
  */

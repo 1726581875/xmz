@@ -8,7 +8,7 @@ import java.util.Set;
 import com.smallchili.xmz.constant.PathConstant;
 import com.smallchili.xmz.enums.ProjectEnum;
 import com.smallchili.xmz.model.Field;
-import com.smallchili.xmz.util.BuildPathUtil;
+import com.smallchili.xmz.util.BuildPath;
 import com.smallchili.xmz.util.DataBaseUtil;
 import com.smallchili.xmz.util.NameConverUtil;
 import com.smallchili.xmz.util.XmlUtil;
@@ -20,8 +20,8 @@ import com.smallchili.xmz.util.XmlUtil;
  */
 public class EntityTemplateFactory implements TemplateFactory {
 
-	public static final String ENTITY_TEMPLATE_PATH = BuildPathUtil
-			.buildDirPath(TEMPLATE_PATH, "model");
+	public static final String ENTITY_TEMPLATE_PATH = BuildPath
+			.buildDir(TEMPLATE_PATH, "model");
 	
 	public static final String TEMPLATE_NAME = "entity";
 	
@@ -34,7 +34,7 @@ public class EntityTemplateFactory implements TemplateFactory {
 	public void create() {
 		//xml里配置的实体类包名路径
 		String defaultDirPath = PathConstant.SOURCE_PATH
-				+ BuildPathUtil.converToDir(NameConverUtil.getPackageName(
+				+ BuildPath.converToDir(NameConverUtil.getPackageName(
 						ProjectEnum.ENTITY_PACKAGE.getElementName()));
 
 		create(defaultDirPath);

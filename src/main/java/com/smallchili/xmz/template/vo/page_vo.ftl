@@ -2,8 +2,8 @@ package ${packageName};
 import java.util.List;
 import java.io.Serializable;
 /**
-* @author ${author}
-* @date ${nowDate}
+* @author ${Author.author}
+* @date ${Author.date}
 * 封装分页结果
 */
 public class PageVO<T>  implements Serializable{

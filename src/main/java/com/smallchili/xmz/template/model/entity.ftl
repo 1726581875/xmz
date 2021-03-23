@@ -3,6 +3,8 @@ package ${packageName};
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Id;
 <#list javaTypeSet as type>
 <#if type=='Date'>
@@ -13,6 +15,8 @@ import java.math.BigDecimal;
 </#if>
 </#list>
 
+@DynamicInsert
+@DynamicUpdate
 @Entity(name = "${tableName}")
 public class ${className}{
     <#list fieldList as field>

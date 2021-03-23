@@ -27,8 +27,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
- * @author ${author}
- * @date: ${nowDate}
+ * @author ${Author.author}
+ * @date: ${Author.date}
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest

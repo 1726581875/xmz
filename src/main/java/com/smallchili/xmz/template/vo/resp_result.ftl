@@ -1,8 +1,8 @@
 package ${packageName};
 import java.io.Serializable;
 /**
-* @author ${author}
-* @date ${nowDate}
+* @author ${Author.author}
+* @date ${Author.date}
 * 封装统一返回结果给前端
 */
 public class RespResult implements Serializable{

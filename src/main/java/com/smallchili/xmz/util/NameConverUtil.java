@@ -36,7 +36,12 @@ public class NameConverUtil {
         String s = lineToHump(str);
         return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
-	
+
+    public static String bigHumpToHump(String str){
+        return str.substring(0, 1).toLowerCase() + str.substring(1);
+    }
+
+
 	/**
 	 * 把包名转换成目录名
 	 * 比如 aa.bb.cc -> aa//bb//cc//

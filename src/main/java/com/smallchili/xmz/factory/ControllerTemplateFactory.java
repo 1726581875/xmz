@@ -6,7 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.smallchili.xmz.util.BuildPathUtil;
+import com.smallchili.xmz.model.Author;
+import com.smallchili.xmz.util.BuildPath;
 import com.smallchili.xmz.util.NameConverUtil;
 import com.smallchili.xmz.util.XmlUtil;
 /**
@@ -16,7 +17,7 @@ import com.smallchili.xmz.util.XmlUtil;
  */
 public class ControllerTemplateFactory implements TemplateFactory{
     // 模板路径
-	public static final String CONTROLLER_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "controller");
+	public static final String CONTROLLER_TEMPLATE_PATH = BuildPath.buildDir(TEMPLATE_PATH, "controller");
 	// 默认模板名
 	public static final String DEFAULT_TEMPLATE_NAME = "controller";
 	
@@ -44,7 +45,7 @@ public class ControllerTemplateFactory implements TemplateFactory{
 		String voPkName = NameConverUtil.getPackageName("voPackage");	
 		/* 类作者、日期 */
 		String author = XmlUtil.getRootElement().getName();
-		String nowDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date()).toString();		
+		String nowDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
 		try {
 			tableMap.forEach((tableName, entityName) -> {
 				String destFullPath = destPath + File.separator + entityName + "Controller.java";
@@ -53,11 +54,10 @@ public class ControllerTemplateFactory implements TemplateFactory{
 				templateParamMap.put("servicePkName",servicePkName);
 				templateParamMap.put("entityPkName", entityPkName);
 				templateParamMap.put("voPkName", voPkName);
-				templateParamMap.put("author", author);
-				templateParamMap.put("nowDate", nowDate);
+				templateParamMap.put("Author", Author.build());
 				//设置实体名
 				templateParamMap.put("Domain", entityName);
-				templateParamMap.put("domain", NameConverUtil.lineToHump(entityName));
+				templateParamMap.put("domain", NameConverUtil.bigHumpToHump(entityName));
 				generateByTemplate(CONTROLLER_TEMPLATE_PATH, templateName,
 						destFullPath,templateParamMap);
 				log.info("已创建 [{}Controller.java]", entityName);

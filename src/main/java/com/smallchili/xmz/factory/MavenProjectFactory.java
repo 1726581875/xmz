@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import org.dom4j.Element;
 import com.smallchili.xmz.enums.ProjectEnum;
-import com.smallchili.xmz.util.BuildPathUtil;
+import com.smallchili.xmz.util.BuildPath;
 import com.smallchili.xmz.util.FileUtil;
 import com.smallchili.xmz.util.NameConverUtil;
 import com.smallchili.xmz.util.XmlUtil;
@@ -19,23 +19,23 @@ import com.smallchili.xmz.util.XmlUtil;
 public class MavenProjectFactory implements TemplateFactory {
 
 	// 工程根目录
-	private String ROOT_PATH = BuildPathUtil.buildDirPath(XmlUtil.getText(ProjectEnum.PROJECT_PATH),
+	private String ROOT_PATH = BuildPath.buildDir(XmlUtil.getText(ProjectEnum.PROJECT_PATH),
 			XmlUtil.getText(ProjectEnum.ARTIFACT_ID));
 	// 源码目录
-	private String SOURCE_CODE_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "main", "java");
+	private String SOURCE_CODE_PATH = BuildPath.buildDir(ROOT_PATH, "src", "main", "java");
 	// 测试代码目录
-	private String TEST_CODE_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "test", "java");
+	private String TEST_CODE_PATH = BuildPath.buildDir(ROOT_PATH, "src", "test", "java");
 	// 资源目录
-	private String RESOURCES_PATH = BuildPathUtil.buildDirPath(ROOT_PATH, "src", "main", "resources");
+	private String RESOURCES_PATH = BuildPath.buildDir(ROOT_PATH, "src", "main", "resources");
 
 	// 基础包路径
-	private String BASE_PACKAGE = BuildPathUtil.buildDirPath(SOURCE_CODE_PATH,
-			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.GROUP_ID)),
-			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.ARTIFACT_ID)));
+	private String BASE_PACKAGE = BuildPath.buildDir(SOURCE_CODE_PATH,
+			BuildPath.converToDir(XmlUtil.getText(ProjectEnum.GROUP_ID)),
+			BuildPath.converToDir(XmlUtil.getText(ProjectEnum.ARTIFACT_ID)));
 	// 测试包路径
-	private String TEST_BASE_PACKAGE = BuildPathUtil.buildDirPath(TEST_CODE_PATH,
-			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.GROUP_ID)),
-			BuildPathUtil.converToDir(XmlUtil.getText(ProjectEnum.ARTIFACT_ID)));
+	private String TEST_BASE_PACKAGE = BuildPath.buildDir(TEST_CODE_PATH,
+			BuildPath.converToDir(XmlUtil.getText(ProjectEnum.GROUP_ID)),
+			BuildPath.converToDir(XmlUtil.getText(ProjectEnum.ARTIFACT_ID)));
 	
 	@Override
 	public void create() {
@@ -56,43 +56,43 @@ public class MavenProjectFactory implements TemplateFactory {
 	}
 
 	private void generatorTestCode() {
-		String testDirPath = BuildPathUtil.buildDirPath(TEST_BASE_PACKAGE);
+		String testDirPath = BuildPath.buildDir(TEST_BASE_PACKAGE);
 		TemplateFactory.build(TestTemplateFactory.class).create(testDirPath);
 	}
 
 	@Override
 	public void create(String destPath) {
-		this.ROOT_PATH = BuildPathUtil.buildDirPath(destPath, XmlUtil.getText(ProjectEnum.ARTIFACT_ID));
+		this.ROOT_PATH = BuildPath.buildDir(destPath, XmlUtil.getText(ProjectEnum.ARTIFACT_ID));
 		create();
 	}
 	
 	private void generatorCode() {
 		// 创建实体类	
-		String entityDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.ENTITY_PACKAGE));
-		TemplateFactory.build(EntityTemplateFactory.class).create(entityDirPath);
+		String entityDirPath = BuildPath.buildDir(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.ENTITY_PACKAGE));
+		TemplateFactory.build(EntityTemplateFactory.class).create(entityDirPath,"entity-lombok");
 
 		// 创建dto类
-		String dtoDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.DTO_PACKAGE_NAME));
+		String dtoDirPath = BuildPath.buildDir(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.DTO_PACKAGE_NAME));
 		TemplateFactory.build(DtoTemplateFactory.class).create(dtoDirPath);
 
 		// 创建dao	
-		String daoDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.DAO_PACKAGE_NAME));		
+		String daoDirPath = BuildPath.buildDir(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.DAO_PACKAGE_NAME));
 		TemplateFactory.build(DaoTemplateFactory.class).create(daoDirPath);
 		
 		// 创建util		
-		String utilDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.UTIL_PACKAGE_NAME));	
+		String utilDirPath = BuildPath.buildDir(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.UTIL_PACKAGE_NAME));
 		TemplateFactory.build(UtilTemplateFactory.class).create(utilDirPath);
 
 		// 创建vo
-		String voDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.VO_PACKAGE_NAME));
+		String voDirPath = BuildPath.buildDir(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.VO_PACKAGE_NAME));
 		TemplateFactory.build(VoTemplateFactory.class).create(voDirPath);
 
 		// 生成Service层代码
-		String serviceDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE + XmlUtil.getText(ProjectEnum.SERVICE_PACKAGE_NAME));
+		String serviceDirPath = BuildPath.buildDir(BASE_PACKAGE + XmlUtil.getText(ProjectEnum.SERVICE_PACKAGE_NAME));
 		TemplateFactory.build(ServiceTemplateFactory.class).create(serviceDirPath,"service-lombok");
 		
 		// 生成Controller层代码
-		String controllerDirPath = BuildPathUtil.buildDirPath(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.CONTROLLER_PACKAGE_NAME));
+		String controllerDirPath = BuildPath.buildDir(BASE_PACKAGE, XmlUtil.getText(ProjectEnum.CONTROLLER_PACKAGE_NAME));
 		TemplateFactory.build(ControllerTemplateFactory.class).create(controllerDirPath);
 
 	}
@@ -101,7 +101,7 @@ public class MavenProjectFactory implements TemplateFactory {
 	 * 创建application.yml文件
 	 */
 	private void createYmlFile() {
-		String ymlTemplatePath = BuildPathUtil.buildDirPath(TEMPLATE_PATH , "config");
+		String ymlTemplatePath = BuildPath.buildDir(TEMPLATE_PATH , "config");
 		String ymlTemplateName = "application";
 
 		String destFullPath =  RESOURCES_PATH + File.separator + "application.yml";
@@ -195,7 +195,7 @@ public class MavenProjectFactory implements TemplateFactory {
 	}
 
 	private void createPomXML() {
-		String pomTemplatePath = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "config");
+		String pomTemplatePath = BuildPath.buildDir(TEMPLATE_PATH, "config");
 		String pomTemplateName = "pom";
         
 		String destFullPath = ROOT_PATH + File.separator + "pom.xml";

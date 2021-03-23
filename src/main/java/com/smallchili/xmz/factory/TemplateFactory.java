@@ -4,9 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Map;
+import com.smallchili.xmz.util.BuildPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.smallchili.xmz.util.BuildPathUtil;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
@@ -18,7 +18,7 @@ import freemarker.template.Template;
  */
 public interface TemplateFactory {
 	// 模板基础路径
-	String TEMPLATE_PATH = BuildPathUtil.buildDirPath("src", "main","java","com","smallchili","xmz","template");
+	String TEMPLATE_PATH = BuildPath.buildDir("src", "main","java","com","smallchili","xmz","template");
 	
 	Logger log = LoggerFactory.getLogger(TemplateFactory.class);
 
@@ -56,9 +56,13 @@ public interface TemplateFactory {
 	default void checkAndCreateDir(String destPath) {
 		File destDir = new File(destPath);
 		if (!destDir.exists()) {
-			log.warn("目录{} 不存在", destPath);
-			destDir.mkdirs();
-			log.info("已创建目录{} ", destPath);
+			try {
+				log.warn("目录{} 不存在", destPath);
+				destDir.mkdirs();
+				log.info("已创建目录{} ", destPath);
+			}catch (Exception e){
+				log.error("创建目录{} 出现异常{}",destPath,e);
+			}
 		}		
 	}
 	

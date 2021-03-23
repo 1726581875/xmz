@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * @author ${author}
- * @date: ${nowDate}
+ * @author ${Author.author}
+ * @date: ${Author.date}
  */
 @RestController
 @RequestMapping("/admin/${domain}s")

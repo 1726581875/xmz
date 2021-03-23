@@ -1,10 +1,12 @@
 package com.smallchili.xmz.util;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.smallchili.xmz.model.Table;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -71,6 +73,24 @@ public class XmlUtil {
 		}
 		return tableMap;
 	}
+
+
+	/**
+	 * 获取List<Table>对象
+	 *
+	 * @return map
+	 */
+	public static List<Table> getTableList() {
+		List<Table> tableList = new ArrayList<>();
+		Map<String, String> tableNameMap = getTableNameMap();
+		tableNameMap.forEach((tableName,objectName) -> {
+            Table table = new Table(tableName,NameConverUtil.bigHumpToHump(objectName),objectName);
+			tableList.add(table);
+		});
+		return tableList;
+	}
+
+
 
 	/**
 	 * 递归遍历节点树，设置值到nameValueMap

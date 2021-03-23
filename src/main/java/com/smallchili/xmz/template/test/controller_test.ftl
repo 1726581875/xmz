@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author ${author}
- * @date: ${nowDate}
+ * @author ${Author.author}
+ * @date: ${Author.date}
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)

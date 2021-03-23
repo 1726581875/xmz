@@ -90,7 +90,7 @@ public class DataBaseUtil {
 			}
 			return fieldList;
 		} catch (Exception e) {
-			log.error("获取表{}列信息名发生错误{}", tableName, e);
+			log.error("获取表{}的列信息名发生错误{}", tableName, e);
 		}
 		return null;
 	}

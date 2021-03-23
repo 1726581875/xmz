@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author ${author}
- * @date: ${nowDate}
+ * @author ${Author.author}
+ * @date: ${Author.date}
  */
 @Service
 public class ${Domain}Service {

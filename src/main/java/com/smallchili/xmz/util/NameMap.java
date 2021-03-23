@@ -36,7 +36,7 @@ public class NameMap {
         packageElementList.forEach(e -> namePkMap.put(e.getName(),basePackageName + "." + e.getTextTrim()));
 
         //遍历namePkMap，构造pkDirMap
-        namePkMap.forEach((k,v) -> pkDirMap.put(v,BuildPathUtil.converToDir(v)));
+        namePkMap.forEach((k,v) -> pkDirMap.put(v, BuildPath.converToDir(v)));
 
     }
 

@@ -6,7 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.smallchili.xmz.util.BuildPathUtil;
+import com.smallchili.xmz.model.Author;
+import com.smallchili.xmz.util.BuildPath;
 import com.smallchili.xmz.util.DataBaseUtil;
 import com.smallchili.xmz.util.NameConverUtil;
 import com.smallchili.xmz.util.XmlUtil;
@@ -18,7 +19,7 @@ import com.smallchili.xmz.util.XmlUtil;
  */
 public class ServiceTemplateFactory implements TemplateFactory {
 
-	public static final String SERVICE_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "service");
+	public static final String SERVICE_TEMPLATE_PATH = BuildPath.buildDir(TEMPLATE_PATH, "service");
 	
 	public static final String DEFAULT_TEMPLATE_NAME = "service";
 	
@@ -59,12 +60,11 @@ public class ServiceTemplateFactory implements TemplateFactory {
 				templateParamMap.put("dtoPkName", dtoPkName);
 				templateParamMap.put("voPkName", voPkName);
 				templateParamMap.put("utilPkName", utilPkName);
-				templateParamMap.put("author", author);
-				templateParamMap.put("nowDate", nowDate);
+				templateParamMap.put("Author", Author.build());
 				templateParamMap.put("entityKey", DataBaseUtil.getPrimaryName(tableName));
 				//设置实体名
 				templateParamMap.put("Domain", entityName);
-				templateParamMap.put("domain", NameConverUtil.lineToHump(entityName));
+				templateParamMap.put("domain", NameConverUtil.bigHumpToHump(entityName));
 				generateByTemplate(SERVICE_TEMPLATE_PATH, templateName,
 						destFullPath,templateParamMap);
 				log.info("已创建 [{}Service.java]", entityName);

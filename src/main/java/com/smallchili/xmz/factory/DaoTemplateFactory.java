@@ -6,7 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.smallchili.xmz.constant.PathConstant;
-import com.smallchili.xmz.util.BuildPathUtil;
+import com.smallchili.xmz.model.Author;
+import com.smallchili.xmz.util.BuildPath;
 import com.smallchili.xmz.util.DataBaseUtil;
 import com.smallchili.xmz.util.NameConverUtil;
 import com.smallchili.xmz.util.XmlUtil;
@@ -19,7 +20,7 @@ import com.smallchili.xmz.util.XmlUtil;
  */
 public class DaoTemplateFactory implements TemplateFactory {
     // 模板位置
-	public static final String DAO_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "dao");
+	public static final String DAO_TEMPLATE_PATH = BuildPath.buildDir(TEMPLATE_PATH, "dao");
 	// 模板名称
 	public static final String TEMPLATE_NAME = "dao";
 	
@@ -27,7 +28,7 @@ public class DaoTemplateFactory implements TemplateFactory {
 	public void create() {
         // TODO 待测试
 		String defaultDirPath = PathConstant.SOURCE_PATH +
-				BuildPathUtil.converToDir(NameConverUtil.getPackageName("daoPackage"));
+				BuildPath.converToDir(NameConverUtil.getPackageName("daoPackage"));
 		create(defaultDirPath);
 	}
 	
@@ -49,9 +50,8 @@ public class DaoTemplateFactory implements TemplateFactory {
 			map.put("daoPackageName", NameConverUtil.getPackageName("daoPackage"));
 			map.put("entityPackageName", NameConverUtil.getPackageName("entityPackage"));
 			map.put("entityName", ObjectName);
-			map.put("nowDate", new SimpleDateFormat("yyyy/MM/dd").format(new Date()).toString());
 			map.put("keyType", keyType);
-			map.put("author", author);
+			map.put("Author", Author.build());
 			generateByTemplate(DAO_TEMPLATE_PATH, templateName, destFullPath, map);
 		});
 	}

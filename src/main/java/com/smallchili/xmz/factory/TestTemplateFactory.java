@@ -4,7 +4,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import com.smallchili.xmz.enums.ProjectEnum;
-import com.smallchili.xmz.util.BuildPathUtil;
+import com.smallchili.xmz.model.Author;
+import com.smallchili.xmz.util.BuildPath;
 import com.smallchili.xmz.util.NameConverUtil;
 import com.smallchili.xmz.util.XmlUtil;
 
@@ -16,9 +17,9 @@ import com.smallchili.xmz.util.XmlUtil;
 public class TestTemplateFactory implements TemplateFactory {
 
 	// 测试模板的位置
-	private final String TEST_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "test");
+	private final String TEST_TEMPLATE_PATH = BuildPath.buildDir(TEMPLATE_PATH, "test");
 
-	private final String CONTROLLER_TEST_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEST_TEMPLATE_PATH, "controller");
+	private final String CONTROLLER_TEST_TEMPLATE_PATH = BuildPath.buildDir(TEST_TEMPLATE_PATH, "controller");
     //测试包名，和项目源码包名一样 groupId + artifactId
 	private final String TEST_PACKAGE_NAME = NameConverUtil.getPackageName(null);
 	
@@ -57,8 +58,7 @@ public class TestTemplateFactory implements TemplateFactory {
 		String author = XmlUtil.getRootElement().getName();
 
 		Map<String, Object> templateParamMap = new HashMap<>();
-		templateParamMap.put("nowDate", new SimpleDateFormat("yyyy/MM/dd").format(new Date()));
-		templateParamMap.put("author", author);
+        templateParamMap.put("Author", Author.build());
 		templateParamMap.put("packageName", TEST_PACKAGE_NAME);
 		generateByTemplate(TEST_TEMPLATE_PATH, templateName, fullPath, templateParamMap);
 		log.info("已创建 [BaseMvcTest.java]");
@@ -82,8 +82,7 @@ public class TestTemplateFactory implements TemplateFactory {
 				String destFullPath = destPath + File.separator + objectName +"ControllerTest.java";
 
 				Map<String, Object> templateParamMap = new HashMap<>();
-				templateParamMap.put("author", XmlUtil.getRootElement().getName());
-				templateParamMap.put("nowDate", new SimpleDateFormat("yyyy/MM/dd").format(new Date()));
+				templateParamMap.put("Author", Author.build());
 				templateParamMap.put("Domain", objectName);
 				templateParamMap.put("domain",NameConverUtil.lineToHump(objectName));
 				templateParamMap.put("packageName", NameConverUtil.getPackageName(

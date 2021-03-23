@@ -4,8 +4,8 @@ import java.util.List;
 import java.io.Serializable;
 import lombok.Data;
 /**
-* @author ${author}
-* @date ${nowDate}
+* @author ${Author.author}
+* @date ${Author.date}
 * 封装分页结果
 */
 @Data

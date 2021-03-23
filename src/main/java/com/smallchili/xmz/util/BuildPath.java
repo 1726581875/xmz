@@ -6,15 +6,16 @@ import java.io.File;
  * @author xmz
  * @date 2020/09/25
  * 帮助构建目录路径
+ * 目录以File.separator分割
  */
-public class BuildPathUtil {
+public class BuildPath {
 	
 	/**
 	 * 
-	 * @param names 可变成参数，传入要拼接的目录路径
+	 * @param paths 可变成参数，传入要拼接的目录路径
 	 * @return 完整目录路径
 	 */
-	public static String buildDirPath(String... paths){			
+	public static String buildDir(String... paths){
 		StringBuilder dirPath= new StringBuilder();
 		for (int i = 0; i < paths.length; i++) {
 			dirPath.append(paths[i]);
@@ -64,7 +65,7 @@ public class BuildPathUtil {
 	
 	
 	public static void main(String[] args) {
-		String name = buildDirPath("aaa","bbb","ccc").toString();
+		String name = buildDir("aaa","bbb","ccc").toString();
 		System.out.println(name);
 		
 		String packageName = buildPackageName("aaa","bbb","ccc").toString();

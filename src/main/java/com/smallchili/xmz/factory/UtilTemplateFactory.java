@@ -6,13 +6,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.smallchili.xmz.constant.PathConstant;
-import com.smallchili.xmz.util.BuildPathUtil;
+import com.smallchili.xmz.model.Author;
+import com.smallchili.xmz.util.BuildPath;
 import com.smallchili.xmz.util.NameConverUtil;
 import com.smallchili.xmz.util.XmlUtil;
 
 public class UtilTemplateFactory implements TemplateFactory {
 
-	public static final String UTIL_TEMPLATE_PATH = BuildPathUtil.buildDirPath(TEMPLATE_PATH, "util");
+	public static final String UTIL_TEMPLATE_PATH = BuildPath.buildDir(TEMPLATE_PATH, "util");
 	
 	public static final String COPY_UTIL_TEMPLATE_NAME = "copy_util";
 	
@@ -57,8 +58,7 @@ public class UtilTemplateFactory implements TemplateFactory {
 		String fullPath = destPath + File.separator +"CopyUtil.java";
 		String author = XmlUtil.getRootElement().getName();
 		Map<String, Object> templateParamMap = new HashMap<>();
-		templateParamMap.put("nowTime", new SimpleDateFormat("yyyy/MM/dd").format(new Date()).toString());
-		templateParamMap.put("author", author);
+		templateParamMap.put("Author", Author.build());
 		templateParamMap.put("packageName", NameConverUtil.getPackageName("utilPackage"));
 		generateByTemplate(UTIL_TEMPLATE_PATH, COPY_UTIL_TEMPLATE_NAME,
 				fullPath, templateParamMap);

@@ -42,11 +42,6 @@ public class DtoTemplateFactory implements TemplateFactory {
 		try {
 			// 遍历多个表信息,生成数据库对应实体类
 			tableMap.forEach((tableName, objectName) -> {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {				
-					e.printStackTrace();
-				}
 				//生成的目标类全路径
 				String destFullPath = destPath + File.separator + objectName + "DTO.java";				
 				// 获取列信息

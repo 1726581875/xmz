@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 </#list>
 
 @Data
-//动态更新、插入，为null的列将不会被加入到语句中
 @DynamicUpdate
 @DynamicInsert
 @Entity(name = "${tableName}")
